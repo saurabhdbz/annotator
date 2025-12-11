@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-container">
+    <div class="card auth-card" style="max-width: 500px;">
+        <h2 class="text-center mb-md">Forgot Username</h2>
+
+        {% if error %}
+        <div class="alert alert-error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="alert alert-success">
+            {{ success }}
+        </div>
+        <div class="text-center mt-md">
+            <a href="/login" class="btn btn-primary">Go to Login</a>
+        </div>
+        {% else %}
+
+        <p class="text-muted mb-md text-center">
+            Enter your registered email and phone number to retrieve your username.
+        </p>
+
+        <form method="post">
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Phone</label>
+                <input type="text" name="phone" class="form-input" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-md">Retrieve Username</button>
+        </form>
+
+        <div class="text-center mt-md">
+            <a href="/login">Back to Login</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

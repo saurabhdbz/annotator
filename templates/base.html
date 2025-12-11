@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annotator Platform</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div>
+            <strong>Annotator Platform</strong>
+        </div>
+
+        <div class="nav-right">
+            {% if request.session.user %}
+            <span>
+                Logged in as <strong>{{ request.session.user.username }}</strong>
+            </span>
+            <a href="/change_password" class="btn btn-secondary">Change Password</a>
+            <a href="/logout" class="btn btn-secondary">Logout</a>
+            {% else %}
+            {% if request.url.path != '/login' %}
+            <a href="/login" class="btn btn-primary">Login</a>
+            {% endif %}
+            {% if request.url.path != '/register' and request.url.path != '/login' %}
+            <a href="/register" class="btn btn-secondary">Register</a>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 class="mb-lg">Translate Sentence</h2>
+
+    {% if error %}
+    <div class="alert alert-error">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <div class="translation-grid">
+        <!-- Source Column -->
+        <div class="card p-sm">
+            <h3 class="text-muted mb-sm" style="font-size: 0.875rem; text-transform: uppercase;">Source Text</h3>
+            <div class="source-box">
+                <p class="source-text" style="margin-bottom: 0;">{{ sentence.text }}</p>
+            </div>
+            <p class="text-muted mt-md" style="font-size: 0.75rem; margin-bottom: 0;">ID: {{ sentence.id }}</p>
+        </div>
+
+        <!-- Translation Column -->
+        <div class="card p-sm">
+            <h3 class="text-muted mb-sm" style="font-size: 0.875rem; text-transform: uppercase;">Your Translation</h3>
+            <form method="post" action="/annotator/submit">
+                <input type="hidden" name="sentence_id" value="{{ sentence.id }}">
+                <input type="hidden" name="source_text" value="{{ sentence.text }}">
+
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <textarea name="translated_text" class="form-textarea" rows="4"
+                        placeholder="Type your translation here..." required style="margin-bottom: 0;"></textarea>
+                </div>
+
+                <div class="flex justify-between items-center mt-md">
+                    <button type="submit" name="action" value="cancel" class="btn btn-secondary"
+                        formnovalidate>Cancel</button>
+                    <div class="flex gap-sm">
+                        <button type="submit" name="action" value="dashboard" class="btn btn-secondary">Submit & Go
+                            Back</button>
+                        <button type="submit" name="action" value="next" class="btn btn-primary">Submit & Next</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

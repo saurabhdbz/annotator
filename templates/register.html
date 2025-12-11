@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-container">
+    <div class="card auth-card" style="max-width: 500px;">
+        <h2 class="text-center mb-md">Create Account</h2>
+
+        {% if error %}
+        <div class="alert alert-error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="alert alert-success">
+            {{ success }}
+        </div>
+        <div class="text-center mt-md">
+            <a href="/login" class="btn btn-primary">Go to Login</a>
+        </div>
+        {% else %}
+
+        <form method="post">
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="full_name" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" id="email" class="form-input" required>
+                <small id="email-error" class="validation-error"></small>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Phone</label>
+                <input type="text" name="phone" id="phone" class="form-input" required>
+                <small id="phone-error" class="validation-error"></small>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Translation Language</label>
+                <select name="language" class="form-select" required>
+                    <option value="" disabled selected>Select a language</option>
+                    {% for code in languages %}
+                    <option value="{{ code }}">{{ code }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-md">Register</button>
+        </form>
+
+        <div class="text-center mt-md">
+            <p>Already have an account? <a href="/login">Login here</a></p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        const emailError = document.getElementById('email-error');
+        const phoneError = document.getElementById('phone-error');
+        const submitBtn = document.querySelector('button[type="submit"]');
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validatePhone(phone) {
+            const re = /^\d{10}$/;
+            return re.test(phone);
+        }
+
+        function updateValidationState(input, isValid, errorElement, errorMessage) {
+            if (isValid) {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+                errorElement.textContent = '';
+                errorElement.classList.remove('show');
+            } else {
+                input.classList.remove('is-valid');
+                input.classList.add('is-invalid');
+                errorElement.textContent = errorMessage;
+                errorElement.classList.add('show');
+            }
+            checkFormValidity();
+        }
+
+        function checkFormValidity() {
+            const isEmailValid = validateEmail(emailInput.value);
+            const isPhoneValid = validatePhone(phoneInput.value);
+
+            // Only enable if both are valid (and not empty)
+            if (isEmailValid && isPhoneValid) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+
+        emailInput.addEventListener('input', function () {
+            const isValid = validateEmail(this.value);
+            updateValidationState(this, isValid, emailError, 'Please enter a valid email address.');
+        });
+
+        phoneInput.addEventListener('input', function () {
+            const isValid = validatePhone(this.value);
+            updateValidationState(this, isValid, phoneError, 'Phone number must be exactly 10 digits.');
+        });
+    });
+</script>
+{% endblock %}

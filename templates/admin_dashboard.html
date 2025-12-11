@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="dashboard-header">
+    <h2>Admin Dashboard</h2>
+    <div class="flex gap-sm">
+        <a href="/admin/upload_source" class="btn btn-primary">
+            Upload Source File
+        </a>
+    </div>
+</div>
+
+<div class="card mb-md">
+    <h3>Pending User Approvals</h3>
+    {% if pending_users %}
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Language</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in pending_users %}
+                <tr>
+                    <td>{{ u.full_name }}</td>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ u.phone }}</td>
+                    <td>{{ u.language }}</td>
+                    <td>
+                        <div class="flex gap-sm">
+                            <form method="post" action="/admin/approve">
+                                <input type="hidden" name="username" value="{{ u.username }}">
+                                <button type="submit" class="btn btn-primary">Approve</button>
+                            </form>
+                            <form method="post" action="/admin/delete_user"
+                                onsubmit="return confirm('Are you sure you want to disapprove this user? This will delete their request.');">
+                                <input type="hidden" name="username" value="{{ u.username }}">
+                                <button type="submit" class="btn btn-danger">Disapprove</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted">No pending users.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3>Approved Annotators</h3>
+    {% if approved_users %}
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Language</th>
+                    <th>Completed</th>
+                    <th>Remaining</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in approved_users %}
+                <tr>
+                    <td>{{ u.full_name }}</td>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ u.phone }}</td>
+                    <td>{{ u.language }}</td>
+                    <td>
+                        <span class="badge badge-success">{{ stats[u.username].completed }}</span>
+                    </td>
+                    <td>{{ stats[u.username].remaining }}</td>
+                    <td>
+                        <div class="flex gap-sm">
+                            <form method="post" action="/admin/delete_user"
+                                onsubmit="return confirm('Are you sure you want to remove this user?');">
+                                <input type="hidden" name="username" value="{{ u.username }}">
+                                <button type="submit" class="btn btn-danger">Remove</button>
+                            </form>
+                            <form method="post" action="/admin/reset_password"
+                                onsubmit="return confirm('Reset password for {{ u.username }} to default \'password\'?');">
+                                <input type="hidden" name="username" value="{{ u.username }}">
+                                <button type="submit" class="btn btn-secondary"
+                                    style="background-color: #f39c12; border-color: #f39c12;">Reset Password</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Language Statistics -->
+<div class="card p-md">
+    <h2 class="mb-md">Language Statistics</h2>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Language</th>
+                    <th>Source File</th>
+                    <th>Total Sentences</th>
+                    <th>Completed</th>
+                    <th>Remaining</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stat in language_stats %}
+                <tr>
+                    <td>{{ stat.language }}</td>
+                    <td>{{ stat.source_filename }}</td>
+                    <td>{{ stat.total }}</td>
+                    <td>{{ stat.completed }}</td>
+                    <td>{{ stat.remaining }}</td>
+                    <td>
+                        <a href="/admin/download_translations/{{ stat.language }}" class="btn btn-secondary btn-sm">
+                            Download Translations
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

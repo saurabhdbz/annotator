@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-container">
+    <div class="card auth-card">
+        <h2 class="text-center mb-md">Login</h2>
+
+        {% if error %}
+        <div class="alert alert-error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post">
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-input" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-md">Login</button>
+        </form>
+
+        <div class="text-center mt-md">
+            <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 10px;">
+                If you have forgotten the password contact with admin.
+            </p>
+            <p style="margin-bottom: 10px;">
+                <a href="/forgot_username">Forgot Username?</a>
+            </p>
+            <p>New user? <a href="/register">Register here</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
